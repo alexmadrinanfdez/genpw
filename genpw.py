@@ -16,3 +16,14 @@ def generate_password(length, strict=False):
             return generate_password(length, strict)
     
     return password
+
+if __name__ == "__main__":
+    length = int(input("Enter the desired password length: "))
+    strict_input = input("Should the password be strict (include uppercase, lowercase, and digits)? (y/n): ")
+    strict = strict_input.lower() == 'y'
+    
+    try:
+        password = generate_password(length, strict)
+        print(f"Generated Password: {password}")
+    except ValueError as e:
+        print(e)
