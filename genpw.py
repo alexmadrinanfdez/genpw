@@ -9,6 +9,8 @@ def generate_password(length, strict=False):
     password = ''.join(secrets.choice(alphabet) for i in range(length))
     
     if strict:
+        if length < 3:
+            raise ValueError("Length is insufficient for strict rules")
         # If generated password does not meet criteria, generate a new one
         if not (any(c.islower() for c in password)
                 and any(c.isupper() for c in password)
