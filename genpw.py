@@ -1,5 +1,6 @@
-import string
+import argparse
 import secrets
+import string
 
 def generate_password(length, strict=False):
     if length <= 0:
@@ -20,12 +21,15 @@ def generate_password(length, strict=False):
     return password
 
 if __name__ == "__main__":
-    length = int(input("Enter the desired password length: "))
-    strict_input = input("Should the password be strict (include uppercase, lowercase, and digits)? (y/n): ")
-    strict = strict_input.lower() == 'y'
-    
+    parser = argparse.ArgumentParser(description='Generate a secure password')
+    parser.add_argument("length", type=int,
+                        help="Length of the generated password")
+    parser.add_argument("--strict", action="store_true",
+                        help="Enforce strict password rules (include uppercase, lowercase, and digits)")
+
+    args = parser.parse_args()
     try:
-        password = generate_password(length, strict)
+        password = generate_password(args.length, args.strict)
         print(f"Generated Password: {password}")
     except ValueError as e:
         print(e)
