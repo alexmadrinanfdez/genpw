@@ -32,4 +32,4 @@ if __name__ == "__main__":
         password = generate_password(args.length, args.strict)
         print(f"Generated Password: {password}")
     except ValueError as e:
-        print(e)
+        parser.error(str(e))
