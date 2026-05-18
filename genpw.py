@@ -21,11 +21,11 @@ def generate_password(length, strict=False):
     return password
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='Generate a secure password')
+    parser = argparse.ArgumentParser(description="Generate a secure password")
     parser.add_argument("length", type=int,
-                        help="Length of the generated password")
+                        help="Number of characters in the generated password")
     parser.add_argument("--strict", action="store_true",
-                        help="Enforce strict password rules (include uppercase, lowercase, and digits)")
+                        help="Password must include uppercase, lowercase, and digits")
 
     args = parser.parse_args()
     try:
