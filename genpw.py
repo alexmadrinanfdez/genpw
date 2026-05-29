@@ -5,20 +5,9 @@ import string
 def generate_password(length, lower, upper, digits, punctuation, strict):
     if length <= 0:
         raise ValueError("Length must be positive")
-    
-    alphabet = ""
-    if lower:
-        alphabet += string.ascii_lowercase
-    if upper:
-        alphabet += string.ascii_uppercase
-    if digits:
-        alphabet += string.digits
-    if punctuation:
-        alphabet += string.punctuation
-    if not alphabet:
-        raise ValueError("At least one character type must be selected")
 
-    password = ''.join(secrets.choice(alphabet) for i in range(length))
+    pool = create_character_pool(lower, upper, digits, punctuation)
+    password = ''.join(secrets.choice(pool) for _ in range(length))
     
     if strict:
         if length < sum((lower, upper, digits, punctuation)):
@@ -33,6 +22,20 @@ def generate_password(length, lower, upper, digits, punctuation, strict):
             return generate_password(length, lower, upper, digits, punctuation, strict)
     
     return password
+
+def create_character_pool(lower, upper, digits, punctuation):
+    pool = ""
+    if lower:
+        pool += string.ascii_lowercase
+    if upper:
+        pool += string.ascii_uppercase
+    if digits:
+        pool += string.digits
+    if punctuation:
+        pool += string.punctuation
+    if not pool:
+        raise ValueError("At least one character type must be selected")
+    return pool
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a secure password")
