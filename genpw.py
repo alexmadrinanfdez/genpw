@@ -46,16 +46,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a secure password")
     parser.add_argument("length", type=int,
                         help="Number of characters in the generated password")
-    parser.add_argument("--include", nargs="+", 
+    parser.add_argument("--exclude", nargs="+", 
                         choices=["lower", "upper", "digits", "punctuation"],
-                        default=["lower", "upper", "digits"],
-                        help="Character types to include in the password")
+                        help="Character types to exclude from the password")
     parser.add_argument("--strict", action="store_true",
                         help="Enforce at least one character from each selected type")
 
     args = parser.parse_args()
+    include = {"lower", "upper", "digits", "punctuation"}
+    if args.exclude:
+        include -= set(args.exclude)
+    
     try:
-        password = generate_password(args.length, args.include, args.strict)
+        password = generate_password(args.length, include, args.strict)
         print(f"Generated Password: {password}")
     except ValueError as e:
         parser.error(str(e))
