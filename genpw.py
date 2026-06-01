@@ -6,41 +6,42 @@ def generate_password(length, include, strict):
     if length <= 0:
         raise ValueError("Length must be positive")
 
-    lower = "lower" in include
-    upper = "upper" in include
-    digits = "digits" in include
-    punctuation = "punctuation" in include
-
-    pool = create_character_pool(lower, upper, digits, punctuation)
+    pool = create_character_pool(include)
     password = ''.join(secrets.choice(pool) for _ in range(length))
     
     if strict:
         if length < len(include):
             raise ValueError("Length is insufficient for strict rules")
         # If generated password does not meet criteria, generate a new one
-        if not (
-            (not lower or any(c.islower() for c in password))
-            and (not upper or any(c.isupper() for c in password))
-            and (not digits or any(c.isdigit() for c in password))
-            and (not punctuation or any(c in string.punctuation for c in password))
-        ):
+        if not password_rules_met(password, include):
             return generate_password(length, include, strict)
     
     return password
 
-def create_character_pool(lower, upper, digits, punctuation):
+def create_character_pool(include):
     pool = ""
-    if lower:
+    if "lower" in include:
         pool += string.ascii_lowercase
-    if upper:
+    if "upper" in include:
         pool += string.ascii_uppercase
-    if digits:
+    if "digits" in include:
         pool += string.digits
-    if punctuation:
+    if "punctuation" in include:
         pool += string.punctuation
     if not pool:
         raise ValueError("At least one character type must be selected")
     return pool
+
+def password_rules_met(password, include):
+    if "lower" in include and not any(c.islower() for c in password):
+        return False
+    if "upper" in include and not any(c.isupper() for c in password):
+        return False
+    if "digits" in include and not any(c.isdigit() for c in password):
+        return False
+    if "punctuation" in include and not any(c in string.punctuation for c in password):
+        return False
+    return True
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a secure password")
