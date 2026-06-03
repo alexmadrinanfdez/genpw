@@ -2,19 +2,20 @@ import argparse
 import secrets
 import string
 
-def generate_password(length, include, strict):
-    if length <= 0:
-        raise ValueError("Length must be positive")
+def validate_inputs(inputs):
+    if inputs.length < 0:
+        raise ValueError("Length must be a non-negative integer")
+    if inputs.strict and inputs.length < len(inputs.include):
+        raise ValueError("Length is insufficient for strict rules")
+    if not inputs.include:
+        raise ValueError("At least one character type must be included")
 
+def generate_password(length, include, strict):
     pool = create_character_pool(include)
     password = ''.join(secrets.choice(pool) for _ in range(length))
-    
-    if strict:
-        if length < len(include):
-            raise ValueError("Length is insufficient for strict rules")
-        # If generated password does not meet criteria, generate a new one
-        if not password_rules_met(password, include):
-            return generate_password(length, include, strict)
+    # If generated password does not meet criteria, generate a new one
+    if strict and not password_rules_met(password, include):
+        return generate_password(length, include, strict)
     
     return password
 
@@ -28,8 +29,6 @@ def create_character_pool(include):
         pool += string.digits
     if "punctuation" in include:
         pool += string.punctuation
-    if not pool:
-        raise ValueError("At least one character type must be selected")
     return pool
 
 def password_rules_met(password, include):
@@ -54,12 +53,13 @@ if __name__ == "__main__":
                         help="Enforce at least one character from each selected type")
 
     args = parser.parse_args()
-    include = {"lower", "upper", "digits", "punctuation"}
+    args.include = {"lower", "upper", "digits", "punctuation"}
     if args.exclude:
-        include -= set(args.exclude)
+        args.include -= set(args.exclude)
     
     try:
-        password = generate_password(args.length, include, args.strict)
+        validate_inputs(args)
+        password = generate_password(args.length, args.include, args.strict)
         print(f"Generated Password: {password}")
     except ValueError as e:
         parser.error(str(e))
