@@ -10,37 +10,34 @@ def validate_inputs(inputs):
     if not inputs.include:
         raise ValueError("At least one character type must be included")
 
-def generate_password(length, include, strict):
-    pool = create_character_pool(include)
-    password = ''.join(secrets.choice(pool) for _ in range(length))
-    # If generated password does not meet criteria, generate a new one
-    if strict and not password_rules_met(password, include):
-        return generate_password(length, include, strict)
-    
-    return password
 
-def create_character_pool(include):
-    pool = ""
+def generate_password(length, include, strict):
+    # Create character pool and start password with required characters
+    pool, required = '', []
     if "lower" in include:
         pool += string.ascii_lowercase
+        if strict:
+            required.append(secrets.choice(string.ascii_lowercase))
     if "upper" in include:
         pool += string.ascii_uppercase
+        if strict:
+            required.append(secrets.choice(string.ascii_uppercase))
     if "digits" in include:
         pool += string.digits
+        if strict:
+            required.append(secrets.choice(string.digits))
     if "punctuation" in include:
         pool += string.punctuation
-    return pool
+        if strict:
+            required.append(secrets.choice(string.punctuation))
+    # Fill the rest of the password
+    remaining_length = length - len(required)
+    pw_chars = required + [secrets.choice(pool) for _ in range(remaining_length)]
+    # Shuffle the password characters
+    secrets.SystemRandom().shuffle(pw_chars)
 
-def password_rules_met(password, include):
-    if "lower" in include and not any(c.islower() for c in password):
-        return False
-    if "upper" in include and not any(c.isupper() for c in password):
-        return False
-    if "digits" in include and not any(c.isdigit() for c in password):
-        return False
-    if "punctuation" in include and not any(c in string.punctuation for c in password):
-        return False
-    return True
+    return ''.join(pw_chars)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a secure password")
