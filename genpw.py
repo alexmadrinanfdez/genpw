@@ -2,6 +2,7 @@ import argparse
 import secrets
 import string
 
+
 def validate_inputs(inputs):
     if inputs.length < 0:
         raise ValueError("Length must be a non-negative integer")
@@ -14,25 +15,19 @@ def validate_inputs(inputs):
 def generate_password(length, include, strict):
     # Create character pool and start password with required characters
     pool, required = '', []
-    if "lower" in include:
-        pool += string.ascii_lowercase
+    chars_per_type = {
+        "lower": string.ascii_lowercase,
+        "upper": string.ascii_uppercase,
+        "digits": string.digits,
+        "punctuation": string.punctuation
+    }
+    for char_type in include:
+        pool += chars_per_type[char_type]
         if strict:
-            required.append(secrets.choice(string.ascii_lowercase))
-    if "upper" in include:
-        pool += string.ascii_uppercase
-        if strict:
-            required.append(secrets.choice(string.ascii_uppercase))
-    if "digits" in include:
-        pool += string.digits
-        if strict:
-            required.append(secrets.choice(string.digits))
-    if "punctuation" in include:
-        pool += string.punctuation
-        if strict:
-            required.append(secrets.choice(string.punctuation))
+            required.append(secrets.choice(chars_per_type[char_type]))
     # Fill the rest of the password
-    remaining_length = length - len(required)
-    pw_chars = required + [secrets.choice(pool) for _ in range(remaining_length)]
+    remaining = [secrets.choice(pool) for _ in range(length - len(required))]
+    pw_chars = required + remaining
     # Shuffle the password characters
     secrets.SystemRandom().shuffle(pw_chars)
 
