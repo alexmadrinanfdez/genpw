@@ -34,7 +34,7 @@ def generate_password(length, include, strict):
     return ''.join(pw_chars)
 
 
-if __name__ == "__main__":
+def build_parser():
     parser = argparse.ArgumentParser(description="Generate a secure password")
     parser.add_argument("length", type=int,
                         help="Number of characters in the generated password")
@@ -44,6 +44,11 @@ if __name__ == "__main__":
     parser.add_argument("--strict", action="store_true",
                         help="Enforce at least one character from each selected type")
 
+    return parser
+
+
+if __name__ == "__main__":
+    parser = build_parser()
     args = parser.parse_args()
     args.include = {"lower", "upper", "digits", "punctuation"}
     if args.exclude:
