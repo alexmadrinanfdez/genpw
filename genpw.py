@@ -35,14 +35,22 @@ def generate_password(length, include, strict):
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(description="Generate a secure password")
-    parser.add_argument("length", type=int,
-                        help="Number of characters in the generated password")
-    parser.add_argument("--exclude", nargs="+", 
-                        choices=["lower", "upper", "digits", "punctuation"],
-                        help="Character types to exclude from the password")
-    parser.add_argument("--strict", action="store_true",
-                        help="Enforce at least one character from each selected type")
+    parser = argparse.ArgumentParser(
+        description="Generate a secure password",
+        suggest_on_error=True)
+    
+    parser.add_argument(
+        "length",
+        nargs='?', default=10, type=int,
+        help="Number of characters in the generated password")
+    parser.add_argument(
+        "-e", "--exclude",
+        nargs="+", choices=["lower", "upper", "digits", "punctuation"],
+        help="Character types to exclude from the password")
+    parser.add_argument(
+        "-s", "--strict",
+        action="store_true",
+        help="Enforce at least one character from each selected type")
 
     return parser
 
