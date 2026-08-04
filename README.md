@@ -12,26 +12,16 @@ python3 -m genpw.genpw [options]
 
 ### Options
 
-Use with the `--help` option to view the documentation on the different options.
+Use with the `--help` option to view the command documentation.
 
-```
-% python3 -m genpw -h
-usage: python3 -m genpw [-h]
-                        [--exclude {lower,upper,digits,punctuation} [{lower,upper,digits,punctuation} ...]]
-                        [--strict]
-                        length
+| Option | Short version | Description | Default |
+| --- | --- | --- | --- |
+| `length` | | Number of characters in the generated password. | 10 |
+| `--help` | `-h`| Show help message and exit. |  |
+| `--exclude` | `-e`| Space-separated list of character types to exclude from the password. Valid values are `lower`, `upper`, `digits` and `punctuation`. | None |
+| `--strict` | `-s`| Enforce at least one character from each included type. | Off |
 
-Generate a secure password
-
-positional arguments:
-  length                Number of characters in the generated password
-
-options:
-  -h, --help            show this help message and exit
-  --exclude {lower,upper,digits,punctuation} [{lower,upper,digits,punctuation} ...]
-                        Character types to exclude from the password
-  --strict              Enforce at least one character from each selected type
-```
+Note that the fact that no character types are excluded by default means they are all included unless specified.
 
 ### Examples
 
@@ -45,7 +35,7 @@ Generate a larger password with no digits.
 python3 genpw/genpw.py 20 --exclude digits
 ```
 
-Generate a short password, but make sure it contains a character of each group: lowercase, uppercase, digits and symbols.
+Generate a short password, but make sure it contains a character of each group: lowercase, uppercase, digits and punctuation symbols.
 ```bash
 python3 genpw/genpw.py 5 --strict
 ```
