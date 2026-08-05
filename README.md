@@ -27,15 +27,15 @@ Note that the fact that no character types are excluded by default means they ar
 
 Generate a password containing 12 characters.
 ```bash
-python3 genpw/genpw.py 12
+python3 -m genpw.genpw 12
 ```
 
 Generate a larger password with no digits.
 ```bash
-python3 genpw/genpw.py 20 --exclude digits
+python3 -m genpw.genpw 20 --exclude digits
 ```
 
 Generate a short password, but make sure it contains a character of each group: lowercase, uppercase, digits and punctuation symbols.
 ```bash
-python3 genpw/genpw.py 5 --strict
+python3 -m genpw.genpw 5 --strict
 ```
