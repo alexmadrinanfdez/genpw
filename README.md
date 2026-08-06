@@ -1,6 +1,7 @@
 # genpw
 
 A command-line tool to generate secure, random passwords based on user requirements.
+It has no external dependencies other than those in the Python Standard Library, making it very lightweight.
 
 ## Usage
 
